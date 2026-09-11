@@ -49,6 +49,12 @@ Es8311AudioCodec::Es8311AudioCodec(void* i2c_master_handle, i2c_port_t i2c_port,
     es8311_cfg.codec_mode = ESP_CODEC_DEV_WORK_MODE_BOTH;
     es8311_cfg.pa_pin = pa_pin;
     es8311_cfg.use_mclk = use_mclk;
+#ifdef CONFIG_BOARD_TYPE_FOLOTOY_AI_PASSPORT
+    // FoloToy AI Passport: mono mic without DAC reference loopback.
+    // Default (false) makes the driver write REG44=0x58 (ADCL+DACR reference
+    // mode) and mono recording is constant zero.
+    es8311_cfg.no_dac_ref = true;
+#endif
     es8311_cfg.hw_gain.pa_voltage = 5.0;
     es8311_cfg.hw_gain.codec_dac_voltage = 3.3;
     es8311_cfg.pa_reverted = pa_inverted_;
