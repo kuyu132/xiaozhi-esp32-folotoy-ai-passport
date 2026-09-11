@@ -13,8 +13,16 @@
 
 // Audio sample rates. Match the FoloToy reference board: 24 kHz avoids
 // server-side resampling mismatch (server sends 24 kHz audio).
+// Audio sample rates. WakeNet9s requires 16 kHz input; the audio service
+// soft-resamples the downlink when needed. Baseline stays at 24 kHz to match
+// the FoloToy reference BSP (server sends 24 kHz audio).
+#ifdef CONFIG_USE_ESP_WAKE_WORD
+#define AUDIO_INPUT_SAMPLE_RATE  16000
+#define AUDIO_OUTPUT_SAMPLE_RATE 16000
+#else
 #define AUDIO_INPUT_SAMPLE_RATE  24000
 #define AUDIO_OUTPUT_SAMPLE_RATE 24000
+#endif
 
 // I2S full-duplex to ES8311 (shared MCLK/BCLK/WS).
 #define AUDIO_I2S_GPIO_MCLK GPIO_NUM_6
