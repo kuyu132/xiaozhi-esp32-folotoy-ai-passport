@@ -19,7 +19,6 @@
                 "CONFIG_PARTITION_TABLE_CUSTOM_FILENAME=\"partitions/v2/folotoy-ai-passport-8m.csv\"",
                 "CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG=y",
                 "CONFIG_USE_ESP_WAKE_WORD=y",
-                "CONFIG_SR_WN_WN9S_NIHAOXIAOZHI=y",
                 "CONFIG_ESP_MAIN_TASK_STACK_SIZE=7168",
                 "CONFIG_FREERTOS_HZ=1000",
                 "CONFIG_LWIP_MAX_SOCKETS=10",

@@ -26,9 +26,26 @@ Pin mapping follows `ai-passport/components/bsp/include/bsp_pins.h`:
 
 ```sh
 python scripts/build.py folotoy/ai-passport --name ai-passport
+python scripts/build.py folotoy/ai-passport --name ai-passport-ww
 ```
 
-Outputs `build/merged-binary.bin` (8 MB flash, USB Serial/JTAG console).
+- `ai-passport`: 24 kHz audio, push-to-talk, no offline wake word
+- `ai-passport-ww`: 16 kHz audio and the offline wake word "你好小智"
+
+The helper script builds either variant in the ESP-IDF 6.1 Docker image:
+
+```sh
+./scripts/build-folotoy-passport.sh ai-passport
+./scripts/build-folotoy-passport.sh ai-passport-ww
+```
+
+Do not flash `build/merged-binary.bin`. It spans reserved device regions and
+is generated only as a build-completeness reference. Use the segmented flash
+script so that `cardid` at `0x356000` and recovery at `0x700000` are preserved:
+
+```sh
+./scripts/flash-folotoy-passport.sh /dev/cu.usbmodemXXXX
+```
 
 ## Controls
 
