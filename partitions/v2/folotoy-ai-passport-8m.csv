@@ -1,0 +1,11 @@
+# ESP-IDF Partition Table
+# Name,   Type, SubType, Offset,   Size,     Flags
+# FoloToy AI Passport (ESP32-C3, 8MB). Hard contract:
+#   cardid @0x356000 never overwritten; recovery @0x700000 never touched; never erase-flash.
+# No OTA slots: official OTA fails gracefully; upgrade via USB reflash.
+nvs,      data, nvs,      0x9000,    0x4000,
+otadata,  data, ota,      0xd000,    0x2000,
+phy_init, data, phy,      0xf000,    0x1000,
+factory,  app,  factory,  0x10000,   0x300000,
+cardid,   data, nvs,      0x356000,  0x4000,
+assets,   data, spiffs,   0x360000,  0x200000,
