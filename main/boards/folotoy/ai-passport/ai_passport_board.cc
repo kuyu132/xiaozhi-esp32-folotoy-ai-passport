@@ -54,6 +54,29 @@ public:
         auto text_font = theme->text_font()->font();
         auto screen = lv_screen_active();
 
+        // The stock compact LCD layout uses a single-line ticker. Passport has
+        // enough vertical space for readable subtitles, so use a bounded text
+        // panel that grows for short replies and scrolls long replies within
+        // the screen instead of extending beyond it.
+        if (bottom_bar_ != nullptr && chat_message_label_ != nullptr) {
+            lv_obj_set_width(bottom_bar_, LV_HOR_RES);
+            lv_obj_set_style_pad_all(bottom_bar_, kReplyPanelPadding, 0);
+            lv_obj_set_style_bg_opa(bottom_bar_, LV_OPA_90, 0);
+            lv_obj_set_scrollbar_mode(bottom_bar_, LV_SCROLLBAR_MODE_OFF);
+
+            lv_obj_set_width(chat_message_label_, LV_HOR_RES - 2 * kReplyPanelPadding);
+            lv_obj_set_style_text_line_space(chat_message_label_, 3, 0);
+            lv_obj_set_style_text_align(chat_message_label_, LV_TEXT_ALIGN_LEFT, 0);
+
+            lv_anim_init(&reply_scroll_animation_);
+            lv_anim_set_delay(&reply_scroll_animation_, 1200);
+            lv_anim_set_repeat_delay(&reply_scroll_animation_, 1200);
+            lv_anim_set_repeat_count(&reply_scroll_animation_, LV_ANIM_REPEAT_INFINITE);
+            lv_obj_set_style_anim(chat_message_label_, &reply_scroll_animation_, LV_PART_MAIN);
+            lv_obj_set_style_anim_duration(
+                chat_message_label_, lv_anim_speed_clamped(35, 1200, 30000), LV_PART_MAIN);
+        }
+
         quote_screen_ = lv_obj_create(screen);
         lv_obj_set_size(quote_screen_, LV_HOR_RES, LV_VER_RES);
         lv_obj_set_style_radius(quote_screen_, 0, 0);
@@ -143,6 +166,47 @@ public:
         lv_obj_add_flag(quote_screen_, LV_OBJ_FLAG_HIDDEN);
     }
 
+    void SetChatMessage(const char* role, const char* content) override {
+        if (content == nullptr) {
+            content = "";
+        }
+        SpiLcdDisplay::SetChatMessage(role, content);
+
+        if (bottom_bar_ == nullptr || chat_message_label_ == nullptr || content[0] == '\0') {
+            return;
+        }
+
+        DisplayLockGuard lock(this);
+        if (!lock) {
+            return;
+        }
+
+        lv_anim_delete(chat_message_label_, nullptr);
+        lv_obj_set_width(chat_message_label_, LV_HOR_RES - 2 * kReplyPanelPadding);
+        lv_obj_set_height(chat_message_label_, LV_SIZE_CONTENT);
+        lv_label_set_long_mode(chat_message_label_, LV_LABEL_LONG_WRAP);
+        lv_obj_update_layout(chat_message_label_);
+
+        const lv_coord_t natural_height = lv_obj_get_height(chat_message_label_);
+        const lv_coord_t visible_height =
+            natural_height > kReplyTextMaxHeight ? kReplyTextMaxHeight : natural_height;
+
+        if (natural_height > kReplyTextMaxHeight) {
+            lv_obj_set_height(chat_message_label_, kReplyTextMaxHeight);
+            lv_label_set_long_mode(chat_message_label_, LV_LABEL_LONG_SCROLL);
+        }
+
+        const auto theme = static_cast<LvglTheme*>(current_theme_);
+        const auto line_height = theme->text_font()->font()->line_height;
+        lv_obj_set_style_text_align(chat_message_label_,
+                                    natural_height <= line_height * 2 ? LV_TEXT_ALIGN_CENTER
+                                                                    : LV_TEXT_ALIGN_LEFT,
+                                    0);
+        lv_obj_set_height(bottom_bar_, visible_height + 2 * kReplyPanelPadding);
+        lv_obj_align(bottom_bar_, LV_ALIGN_BOTTOM_MID, 0, 0);
+        lv_obj_align(chat_message_label_, LV_ALIGN_CENTER, 0, 0);
+    }
+
     void SetTheme(Theme* theme) override {
         SpiLcdDisplay::SetTheme(theme);
         if (quote_screen_ == nullptr) {
@@ -193,6 +257,9 @@ public:
     }
 
 private:
+    static constexpr lv_coord_t kReplyPanelPadding = 12;
+    static constexpr lv_coord_t kReplyTextMaxHeight = DISPLAY_HEIGHT - 72;
+
     void UpdateQuotationLocked() {
         lv_label_set_text_fmt(quote_label_, "“%s”", kMaoQuotations[quotation_index_]);
         lv_label_set_text(source_label_, "—— 毛泽东");
@@ -208,6 +275,7 @@ private:
     lv_obj_t* hint_label_ = nullptr;
     size_t quotation_index_ = 0;
     bool quotation_mode_ = false;
+    lv_anim_t reply_scroll_animation_ = {};
 };
 
 class AiPassportBoard : public WifiBoard {

@@ -9,6 +9,7 @@
                 "CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y",
                 "CONFIG_PARTITION_TABLE_CUSTOM_FILENAME=\"partitions/v2/folotoy-ai-passport-8m.csv\"",
                 "CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG=y",
+                "CONFIG_USE_MULTILINE_CHAT_MESSAGE=y",
                 "CONFIG_USE_ESP_WAKE_WORD=n"
             ]
         },
@@ -18,6 +19,7 @@
                 "CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y",
                 "CONFIG_PARTITION_TABLE_CUSTOM_FILENAME=\"partitions/v2/folotoy-ai-passport-8m.csv\"",
                 "CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG=y",
+                "CONFIG_USE_MULTILINE_CHAT_MESSAGE=y",
                 "CONFIG_USE_ESP_WAKE_WORD=y",
                 "CONFIG_ESP_MAIN_TASK_STACK_SIZE=7168",
                 "CONFIG_FREERTOS_HZ=1000",

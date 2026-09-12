@@ -59,6 +59,9 @@ The three physical keys map to XiaoZhi's voice-assistant actions:
 - In the quotation reader, **UP / DOWN** turns pages and **OK** exits. The
   reader includes a compact vector portrait and page number. It contains 512
   short excerpts and starts on a random page after every boot.
+- Voice-recognition and assistant text is wrapped to the 240x320 display.
+  Short replies use a compact panel; long replies expand within the available
+  screen area and scroll vertically without covering the status bar.
 
 Because the ladder shares one ADC pin, XiaoZhi reads it as three
 independent ADC buttons (the same pattern as the ESP-BOX-Lite).
