@@ -1,8 +1,16 @@
-# An MCP-based Chatbot
+# FoloToy XiaoZhi AI Passport
 
 (English | [中文](README_zh.md) | [日本語](README_ja.md))
 
 ## Introduction
+
+This is a XiaoZhi voice-assistant port for the **FoloToy AI Passport
+(ESP32-C3)**, based on [78/xiaozhi-esp32](https://github.com/78/xiaozhi-esp32).
+The port covers the display, ES8311 audio, buttons, battery monitoring,
+protected flash partitions, and an optional offline wake word.
+
+See [`main/boards/folotoy/ai-passport/README.md`](main/boards/folotoy/ai-passport/README.md)
+for build, segmented flashing, and control instructions.
 
 👉 [Human: Give AI a camera vs AI: Instantly finds out the owner hasn't washed hair for three days【bilibili】](https://www.bilibili.com/video/BV1bpjgzKEhd/)
 

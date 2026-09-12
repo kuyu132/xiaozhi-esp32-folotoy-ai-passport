@@ -1,4 +1,4 @@
-# MCP ベースのチャットボット
+# FoloToy XiaoZhi AI Passport
 
 （日本語 | [中文](README_zh.md) | [English](README.md)）
 

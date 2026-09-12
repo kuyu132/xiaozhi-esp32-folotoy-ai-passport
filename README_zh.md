@@ -1,8 +1,15 @@
-# An MCP-based Chatbot
+# FoloToy XiaoZhi AI Passport
 
 （中文 | [English](README.md) | [日本語](README_ja.md)）
 
 ## 介绍
+
+这是面向 **FoloToy AI Passport（ESP32-C3）** 的小智语音助手移植版，基于
+[78/xiaozhi-esp32](https://github.com/78/xiaozhi-esp32) 开发。移植包含屏幕、
+ES8311 音频、按键、电池检测、分区保护以及可选离线唤醒词支持。
+
+AI Passport 的构建、分段烧录和按键说明见
+[`main/boards/folotoy/ai-passport/README.md`](main/boards/folotoy/ai-passport/README.md)。
 
 👉 [人类：给 AI 装摄像头 vs AI：当场发现主人三天没洗头【bilibili】](https://www.bilibili.com/video/BV1bpjgzKEhd/)
 

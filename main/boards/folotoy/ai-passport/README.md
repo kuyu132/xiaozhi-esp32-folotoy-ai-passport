@@ -55,6 +55,10 @@ The three physical keys map to XiaoZhi's voice-assistant actions:
   while starting up)
 - **UP** — single click: volume +10; long press: max volume
 - **DOWN** — single click: volume -10; long press: mute
+- **OK** — long press: enter or leave the “毛教员语录” reader
+- In the quotation reader, **UP / DOWN** turns pages and **OK** exits. The
+  reader includes a compact vector portrait and page number. It contains 512
+  short excerpts and starts on a random page after every boot.
 
 Because the ladder shares one ADC pin, XiaoZhi reads it as three
 independent ADC buttons (the same pattern as the ESP-BOX-Lite).
