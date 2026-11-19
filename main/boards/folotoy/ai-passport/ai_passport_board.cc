@@ -278,12 +278,20 @@ private:
     lv_anim_t reply_scroll_animation_ = {};
 };
 
+#if !defined(CONFIG_AI_PASSPORT_APP_CITY_RADIO) && !defined(CONFIG_AI_PASSPORT_APP_COLD_JOKES) && \
+    !defined(CONFIG_AI_PASSPORT_APP_MAO_QUOTES) && !defined(CONFIG_XIAOZHI_FIRMWARE_APP_COMMUNITY)
+#include "ai_passport_conversation_display.h"
+using AiPassportBoardDisplay = AiPassportConversationDisplay;
+#else
+using AiPassportBoardDisplay = AiPassportDisplay;
+#endif
+
 class AiPassportBoard : public WifiBoard {
 private:
     i2c_master_bus_handle_t codec_i2c_bus_;
     Button* adc_button_[kAdcButtonNum];
     adc_oneshot_unit_handle_t adc_handle_ = nullptr;
-    AiPassportDisplay* display_;
+    AiPassportBoardDisplay* display_;
     Cw2017BatteryMonitor* battery_;
 
     void InitializeCodecI2c() {
@@ -485,7 +493,7 @@ private:
         esp_lcd_panel_mirror(panel, DISPLAY_MIRROR_X, DISPLAY_MIRROR_Y);
         esp_lcd_panel_disp_on_off(panel, true);
 
-        display_ = new AiPassportDisplay(panel_io, panel, DISPLAY_WIDTH, DISPLAY_HEIGHT,
+        display_ = new AiPassportBoardDisplay(panel_io, panel, DISPLAY_WIDTH, DISPLAY_HEIGHT,
                                          DISPLAY_OFFSET_X, DISPLAY_OFFSET_Y, DISPLAY_MIRROR_X,
                                          DISPLAY_MIRROR_Y, DISPLAY_SWAP_XY);
     }

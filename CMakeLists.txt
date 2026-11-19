@@ -9,13 +9,18 @@ include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 # "Trim" the build. Include the minimal set of components, main, and anything it depends on.
 idf_build_set_property(MINIMAL_BUILD ON)
 
-set(PROJECT_VER "2.5.0-folotoy")
+set(PROJECT_VER "2.6.0")
 project(xiaozhi)
 
-# uart-uhci 0.3.2 still uses the pre-6.1 GDMA API name. Keep the workaround
-# scoped to that managed component until its upstream release catches up.
-if((IDF_VERSION_MAJOR GREATER 6) OR
-   ((IDF_VERSION_MAJOR EQUAL 6) AND (IDF_VERSION_MINOR GREATER_EQUAL 1)))
+# Some IDF 6.1 development builds changed the GDMA API; the final release
+# retains the original signature. Inject the shim only when the new API exists.
+set(gdma_header "$ENV{IDF_PATH}/components/esp_driver_dma/include/esp_private/gdma.h")
+set(gdma_struct_api "")
+if(EXISTS "${gdma_header}")
+    file(STRINGS "${gdma_header}" gdma_struct_api
+         REGEX "^[^/]*gdma_get_channel_alignment_constraints\\(")
+endif()
+if(gdma_struct_api)
     idf_component_get_property(uart_uhci_lib 78__uart-uhci COMPONENT_LIB)
     if(uart_uhci_lib)
         target_compile_options(${uart_uhci_lib} PRIVATE
